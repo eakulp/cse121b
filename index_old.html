@@ -16,3 +16,124 @@
     </nav>
 </body>
 </html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSE 121b | Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+  <nav>
+    <ul id="menu">
+      <li><a id="toggleMenu">&equiv;</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="w01-task.html">W1 Task</a></li>
+      <li><a href="w03-task.html">W3 Task</a></li>
+      <li><a href="w04-task.html">W4 Task</a></li>
+      <li><a href="w05-task.html" class="active">W5 Task</a></li>
+      <li><a href="project.html">Project</a></li>
+    </ul>
+  </nav>
+  <main id="gridly">
+    <h1>Project - Eymi Kulp</h1>
+    <h2>Fun Facts About Dog Breeds!</h2>
+    <button id="getFact">Get Dog Fact</button>
+    <ul id="breedsList"></ul>
+
+    <!--select id="sortBy" title="Choose a data filter.">
+      <option value="" disabled selected>Filter Temples</option>
+      <option value="utah">Utah</option>
+      <option value="notutah">Outside of Utah</option>
+      <option value="older">Built Before 1950</option>
+      <option value="all">No Filter</option>
+    </select-->
+
+    <!--div id="temples">
+    </div-->
+  </main>
+
+
+  <footer>
+    &copy;<span id="year"></span> | Week 06 - Final Project | CSE 121b
+  </footer>
+  <script src="scripts/project.js"></script>
+  <script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+  </script>
+  <script src="scripts/project.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+let generate_btn = document.querySelector('.generate_btn')
+let animal_type = document.querySelector('#animal_type')
+let num_facts = document.querySelector("#num_facts")
+
+
+// Get Data from User
+generate_btn.addEventListener('click', function () { 
+  let animal_value = animal_type.value.toLowerCase()
+  
+  if (parseInt(num_facts.value) > 500) {
+    alert("Max is 500")
+  }
+  
+  // Fetch Api
+  function fetchFacts() {
+
+    fetch(`https://cat-fact.herokuapp.com/facts/random?animal_type=${animal_value}&amount=${num_facts.value}`)
+      .then(response => response.text())
+      .then(data => {
+       let fact = JSON.parse(data).text
+       console.log(fact) 
+       var para = document.createElement("p");
+       para.classList.add('list-group-item')
+       para.classList.add('text-dark')
+       para.classList.add('p-3')
+       var node = document.createTextNode(fact);
+       para.appendChild(node);
+
+       let facts = document.querySelector(".facts");
+       facts.appendChild(para);
+      })
+      .catch(err => console.log(err))
+  }
+
+  //  Create clear button
+       var btn = document.createElement("button");
+       btn.innerHTML = 'Clear'
+       btn.classList.add("btn")
+       btn.classList.add("btn-danger")
+       btn.classList.add("clear")
+       let head = document.querySelector(".head");
+       head.appendChild(btn);
+
+       const clear_btn = document.querySelector('.clear')
+       clear_btn.addEventListener('click', function() {
+        let facts = document.querySelector(".facts");
+        facts.innerHTML = '';
+        clear_btn.parentNode.removeChild(clear_btn)
+       })
+
+
+  for(let i=0; i< num_facts.value; i++) {
+    fetchFacts()
+  }
+
+})
